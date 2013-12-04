@@ -7,15 +7,18 @@ STATUS=$2
 sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:addgroup["${NODENAME}","no mcollective"] 
 
 #clasify node with code to remove mcollective certs
-sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:add["node_decommission"] nodeclass:add["node_decommission"] nodegroup:addclass["node_decommission","node_decommission"] node:addgroup["${NODENAME}","node_decommission"]
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:add["node_decommission"] 
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodeclass:add["node_decommission"] 
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:addclass["node_decommission","node_decommission"] 
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:addgroup["${NODENAME}","node_decommission"]
 
 #run puppet to remove mcollective
-sudo -i -u peadmin mco puppet runonce -A $NODENAME
+sudo -i -u peadmin mco puppet runonce -I $NODENAME
 
 sleep 60
 
 #clean the cert
-#/opt/puppet/bin/puppet cert clean $NODENAME
+/opt/puppet/bin/puppet cert clean $NODENAME
 
 #deactive the node	
 #/opt/puppet/bin/puppet node deactivate $NODENAME
@@ -25,7 +28,9 @@ if [ "$STATUS" == "destroy" ]; then
 	sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:del["${NODENAME}"]
 fi
 
-#sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:del["node_decommission"] nodeclass:del["node_decommission"] 
+#clean up
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:del["node_decommission"] 
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodeclass:del["node_decommission"] 
 
 #restart the service
 #service pe-httpd restart
