@@ -1,8 +1,9 @@
 class node_decommission::master($target=undef) {
 
   file_line { 'site.pp':
-    path => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
-    line => "node ${target} {include node_decommission::client}",
+    path   => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
+    line   => "node ${target} {include node_decommission::client}",
+    before => Exec['run puppet'],
   }
 
   file {'puppet-destroy':
@@ -12,7 +13,7 @@ class node_decommission::master($target=undef) {
   }
 
   exec {'run puppet':
-    command => "sudo -i -u peadmin mco puppet runonce -I ${NODENAME}",
+    command => "sudo -i -u peadmin mco puppet runonce -I ${target}",
     path    => '/usr/bin',
     before  => Exec['node_destroy'],
   }
