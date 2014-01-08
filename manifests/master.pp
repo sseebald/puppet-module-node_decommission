@@ -2,26 +2,23 @@ class node_decommission::master($target=undef) {
 
   file_line { 'site.pp':
     path => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
-    line => "node ${target} {include node_decommissions::client}",
+    line => "node ${target} {include node_decommission::client}",
   }
-  #
-  #  exec {'remote puppet run':
-  #    command => "sudo -i -u peadmin mco puppet runonce -I ${target}",
-  #    path    => '/opt/puppet/bin',
-  #  }
-  #
-  #  exec {'deactivate':
-  #    command => "puppet node deactivate ${target}",
-  #    path    => '/opt/puppet/bin',
-  #  }
-  #
-  #  exec {'clean':
-  #    command => "puppet cert clean ${target}",
-  #    path    => '/opt/puppet/bin',
-  #  }
-  #
-  #  service {'pe-httpd':
-  #    subscribe => File_line['site.pp'],
-  #  }
-  #
+
+  file {'puppet-destroy':
+    ensure => file,
+    path   => '/opt/puppet/bin/puppet-destroy',
+    source => 'puppet:///modules/node_decommission/node_destroy.sh',
+  }
+
+  exec {'node_destroy':
+    command => "puppet destroy ${target}",
+    path    => ['/opt/puppet/bin','/usr/bin'],
+    require => File['puppet-destroy'],
+  }
+ 
+  service {'pe-httpd':
+    subscribe => File_line['site.pp'],
+  }
+
 }
