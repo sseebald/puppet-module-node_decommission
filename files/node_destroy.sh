@@ -23,7 +23,7 @@ sleep 60
 #deactive the node	
 /opt/puppet/bin/puppet node deactivate $NODENAME
 
-sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:del["${NODENAME}"]
+#sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:del["${NODENAME}"]
 
 #clean up
 #sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:del["node_decommission"] 

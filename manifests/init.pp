@@ -22,12 +22,13 @@ class node_decommission {
     ensure => stopped,
   }
   
-  #  file {'/etc/puppetlabs/mcollective/ssl':
-  #    before => File['/etc/puppetlabs/puppet/ssl/'],
-  #  }
-  # 
+ 
   
   file {'/etc/puppetlabs/puppet/ssl':}
+  
+  file {'ssl':
+    path => '/etc/puppetlabs/mcollective/ssl',
+  }
   
   #  
   # 
