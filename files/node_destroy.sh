@@ -21,16 +21,13 @@ sleep 60
 /opt/puppet/bin/puppet cert clean $NODENAME
 
 #deactive the node	
-#/opt/puppet/bin/puppet node deactivate $NODENAME
+/opt/puppet/bin/puppet node deactivate $NODENAME
 
-if [ "$STATUS" == "destroy" ]; then
-	echo removing?
-	sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:del["${NODENAME}"]
-fi
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:del["${NODENAME}"]
 
 #clean up
-sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:del["node_decommission"] 
-sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodeclass:del["node_decommission"] 
+#sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodegroup:del["node_decommission"] 
+#sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodeclass:del["node_decommission"] 
 
 #restart the service
-#service pe-httpd restart
+service pe-httpd restart
