@@ -11,6 +11,12 @@ class node_decommission::master($target=undef) {
     source => 'puppet:///modules/node_decommission/node_destroy.sh',
   }
 
+  exec {'run puppet':
+    command => "sudo -i -u peadmin mco puppet runonce -I ${NODENAME}",
+    path    => '/usr/bin',
+    before  => Exec['node_destroy'],
+  }
+
   exec {'node_destroy':
     command => "puppet destroy ${target}",
     path    => ['/opt/puppet/bin','/usr/bin'],
@@ -18,7 +24,7 @@ class node_decommission::master($target=undef) {
   }
  
   service {'pe-httpd':
-    subscribe => File_line['site.pp'],
+    subscribe => Exec['node_destroy'],
   }
 
 }
