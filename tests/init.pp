@@ -1,1 +1,1 @@
-include puppet_destroy
+include node_decommission::master
