@@ -1,4 +1,4 @@
-class node_decommission::client inherits pe_mcollective::shared_key_files {
+class node_decommission::client {
   
  File {  
     ensure  => absent,
