@@ -2,6 +2,11 @@
 
 NODENAME=$1
 
+#add node to no mcollective group
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production node:addgroup["${NODENAME}","no mcollective"]
+
+sleep 30
+
 #run puppet to remove mcollective
 sudo -i -u peadmin mco puppet runonce -I $NODENAME
 
