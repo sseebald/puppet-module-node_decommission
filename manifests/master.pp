@@ -3,6 +3,7 @@ class node_decommission::master($target=undef) {
   file {'/etc/puppetlabs/puppet/environments/production/manifests/site.pp.bak':
     ensure => file,
     source => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
+    before => File_line['site.pp'],
   }
 
   file_line { 'site.pp':
@@ -30,8 +31,8 @@ class node_decommission::master($target=undef) {
   }
  
   file {'/etc/puppetlabs/puppet/environments/production/manifests/site.pp':
-    ensure => file,
-    source => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp.bak',
+    ensure  => file,
+    source  => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp.bak',
   }
 
   service {'pe-httpd':
