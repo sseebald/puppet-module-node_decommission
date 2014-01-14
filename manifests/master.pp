@@ -1,5 +1,10 @@
 class node_decommission::master($target=undef) {
 
+  file {'/etc/puppetlabs/puppet/environments/production/manifests/site.pp.bak':
+    ensure => file,
+    source => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
+  }
+
   file_line { 'site.pp':
     path   => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp',
     line   => "node ${target} {include node_decommission::client}",
@@ -24,6 +29,11 @@ class node_decommission::master($target=undef) {
     require => File['puppet-destroy'],
   }
  
+  file {'/etc/puppetlabs/puppet/environments/production/manifests/site.pp':
+    ensure => file,
+    source => '/etc/puppetlabs/puppet/environments/production/manifests/site.pp.bak',
+  }
+
   service {'pe-httpd':
     subscribe => Exec['node_destroy'],
   }

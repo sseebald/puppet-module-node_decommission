@@ -16,4 +16,5 @@ sudo -i -u peadmin mco puppet runonce -I $NODENAME
 #deactive the node	
 /opt/puppet/bin/puppet node deactivate $NODENAME
 
-
+#remove classification from the master
+sudo /opt/puppet/bin/rake -f /opt/puppet/share/puppet-dashboard/Rakefile RAILS_ENV=production nodeclass:del["node_decommission::master"]
